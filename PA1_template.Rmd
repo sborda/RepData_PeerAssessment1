@@ -7,9 +7,11 @@ output:
     fig_caption: yes
     toc: yes
 ---
-
-```{r setup, include=FALSE}
+getwd()
+```{r setup, include=TRUE}
+library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
+  opts_chunk$set(fig.path = "../RepData_PeerAssessment1/figures/", dev='pdf')
 ```
 
 ## Loading and preprocessing the data
@@ -20,9 +22,10 @@ Then load the whole file, incluiding NA and NaN's in a data frame
 called "activity". 
 
 ```{r load file}
+list.files()
+if(!file.exists("activity.csv")) {unzip("activity.zip")}
 activity <- read.csv("activity.csv", na.strings=c(NA,""))
 str(activity)
-
 ```
 
 The "date" column is formatted as Factor class, change it to a Date class and steps as numeric.
@@ -30,7 +33,6 @@ The "date" column is formatted as Factor class, change it to a Date class and st
 ```{r}
 activity$date <- as.Date(activity$date)
 activity$steps<- as.numeric(activity$steps)
-
 ```
 
 
@@ -43,7 +45,7 @@ stepsday <- tapply(activity$steps, activity$date, sum, na.rm=TRUE)
 
 With this variable plot a histogram that shows the total number of steps taken per day.
 
-```{r}
+```{r, hist Mean Total Numeber of Steps taken per dayr}
 hist(stepsday, xlab="Sum of steps per day", 
      main="Mean Total Number of Steps taken per day")
 ```
@@ -68,7 +70,7 @@ stepsinterval<- tapply(activity$steps, activity$interval, mean, na.rm=TRUE)
 ```
 
 Using the base plotting system, create a plot using the average number of steps as y axis and the five minute intervals from 0 to 2355, as x axis.
-```{r, }
+```{r, plot Average number of steps}
 plot(y=stepsinterval, x=unique(activity$interval), type="l", 
      xlab="5 minute interval", ylab="Average number of steps")
 ```
@@ -136,7 +138,7 @@ stepsday_complete <- tapply(activity_complete$steps,
 ```
 
 To create the histogram repeate the previous hist code chunk, but this time with the new data frame without missing values.
-```{r}
+```{r, "hist Mean Total Number of Steps taken per day (no NA's)"}
 hist(stepsday_complete, xlab="Sum of steps per day", 
      main="Mean Total Number of Steps taken per day (no NA's)")
 ```
@@ -153,7 +155,7 @@ and median of `r median_complete` steps per day.
 
 Use par() to create a comparisson of the two histograms.
 
-```{r}
+```{r, hist Comparison of histograms}
 par(mfrow=c(1,2), mar=c(5,4,3,1), oma=c(0,0,2,0) )
 hist(stepsday, xlab="Sum of steps per day", 
      main="with NA's")
@@ -189,7 +191,7 @@ activity_week_total <- summarise(activity_week, steps= mean(steps))
 ```
 
 Create a plot of 1x2, divided by the condition of weekday o weekend.
-```{r}
+```{r, Weekday vs Weekend Activity }
 library(lattice)
 xyplot(steps ~ interval | weekdays2, data = activity_week_total, type = "l", layout = c(1, 2))
 
