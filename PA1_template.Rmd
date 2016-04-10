@@ -25,6 +25,7 @@ called "activity".
 list.files()
 if(!file.exists("activity.csv")) {unzip("activity.zip")}
 activity <- read.csv("activity.csv", na.strings=c(NA,""))
+file.remove("activity.csv")
 str(activity)
 ```
 
